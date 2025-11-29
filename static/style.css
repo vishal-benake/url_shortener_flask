@@ -1,7 +1,114 @@
+/* ------------------------------
+   ORIGINAL USER STYLES
+------------------------------ */
 body {
     background-color: #f8f9fa;
+    font-family: "Inter", sans-serif;
 }
 
 .card {
     border-radius: 0.5rem;
+}
+
+.text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ------------------------------
+   CARD ENHANCEMENT
+------------------------------ */
+.card {
+    border: none;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* ------------------------------
+   COPY SUCCESS BUBBLE
+   (Auto-hide + fade-out)
+------------------------------ */
+.copy-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #198754;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .4s ease, transform .4s ease;
+    transform: translateY(-10px);
+    z-index: 9999;
+}
+
+.copy-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ------------------------------
+   FLASH MESSAGES AUTO-HIDE
+------------------------------ */
+.alert {
+    animation: fadeOut 1s ease 3s forwards;
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+/* ------------------------------
+   ADMIN TABLE STYLING
+------------------------------ */
+.table th, .table td {
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+/* ------------------------------
+   BUTTON IMPROVEMENTS
+------------------------------ */
+.btn {
+    border-radius: 6px !important;
+}
+
+.btn-warning,
+.btn-success {
+    color: #fff;
+}
+
+.dropdown-menu {
+    border-radius: 0.5rem;
+}
+
+/* ------------------------------
+   RESPONSIVE FIXES
+------------------------------ */
+@media (max-width: 768px) {
+    table {
+        font-size: 14px;
+    }
+
+    .btn-sm {
+        padding: 3px 6px;
+        font-size: 12px;
+    }
+
+    /* responsive copy toast */
+    .copy-toast {
+        right: 10px;
+        left: 10px;
+        top: auto;
+        bottom: 20px;
+        text-align: center;
+    }
 }

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Recent Action Logs</h3>
+<div class="table-responsive">
+  <table class="table table-sm table-striped">
+    <thead><tr><th>Time</th><th>User ID</th><th>Action</th><th>Details</th></tr></thead>
+    <tbody>
+      {% for l in logs %}
+      <tr>
+        <td>{{ l.timestamp }}</td>
+        <td>{{ l.user_id or '-' }}</td>
+        <td>{{ l.action }}</td>
+        <td class="text-truncate" style="max-width:500px;">{{ l.details }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

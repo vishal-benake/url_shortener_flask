@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-3">Referral History</h2>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Referral Code</th>
+            <th>Used By</th>
+            <th>IP Address</th>
+            <th>User Agent</th>
+            <th>Timestamp</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rh, code, username in history %}
+        <tr>
+            <td>{{ rh.id }}</td>
+            <td>{{ code }}</td>
+            <td>{{ username or "N/A" }}</td>
+            <td>{{ rh.ip_address or "-" }}</td>
+            <td class="text-truncate" style="max-width: 200px;">{{ rh.user_agent or "-" }}</td>
+            <td>{{ rh.timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

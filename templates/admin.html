@@ -1,37 +1,93 @@
 {% extends "base.html" %}
 {% block content %}
-
-<h2 class="mb-3">Admin Panel</h2>
-
-<!-- Controls Row -->
-<div class="d-flex justify-content-end mb-3">
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Admin Panel</h2>
+  <!-- More Actions Dropdown -->
+    <div class="d-flex justify-content-end mb-3">
     <div class="btn-group">
         <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
             More Actions
         </button>
-
         <ul class="dropdown-menu">
-
-            <!-- DELETE SELECTED (Triggers mainForm submit) -->
             <li>
-                <button type="button" class="dropdown-item"
-                        onclick="document.getElementById('mainForm').submit();">
-                    Delete Selected
-                </button>
+                <!-- <form action="{{ url_for('delete_selected') }}" method="POST" id="deleteSelectedForm"> -->
+                    <button type="submit" class="dropdown-item" onclick="document.getElementById('mainForm').submit();">Delete Selected</button>
+                <!-- </form> -->
             </li>
 
-            <!-- DELETE DEACTIVATED URLs -->
             <li>
                 <form action="{{ url_for('delete_deactivated') }}" method="POST">
-                    <button type="submit" class="dropdown-item text-danger">
-                        Delete All Deactivated
-                    </button>
+                    <button type="submit" class="dropdown-item text-danger">Delete All Deactivated</button>
                 </form>
             </li>
-
+             <li>
+            {% if current_user.user.role == 'admin' %}
+            <!-- <form action="{{ url_for('view_logs') }}" method="POST">
+             <button type="submit" class="dropdown-item text-danger">View Logs</button>
+            </form> -->
+              <a class="dropdown-item text-danger" href="{{ url_for('ref_History') }}">Referral History</a> 
+            {% endif %}
+            </li>
+            <li>
+            {% if current_user.user.role == 'admin' %}
+            <!-- <form action="{{ url_for('view_logs') }}" method="POST">
+             <button type="submit" class="dropdown-item text-danger">View Logs</button>
+            </form> -->
+              <a class="dropdown-item text-danger" href="{{ url_for('view_logs') }}">View Logs</a> 
+            {% endif %}
+            </li>
         </ul>
     </div>
 </div>
+
+
+  <!-- <div>
+    {% if current_user.user.role == 'admin' %}
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('view_logs') }}">View Logs</a>
+    {% endif %}
+  </div> -->
+</div>
+
+<!-- Account Manager -->
+<div class="card mb-3">
+  <div class="card-body">
+    <h5>Account Manager</h5>
+    {% if current_user.user.role == 'admin' %}
+    <!-- <form class="row g-2 align-items-end" action="{{ url_for('create_user') }}" method="POST">
+      <div class="col-md-4">
+        <input type="text" class="form-control" name="username" placeholder="username">
+      </div>
+      <div class="col-md-4">
+        <input type="password" class="form-control" name="password" placeholder="password">
+      </div>
+      <div class="col-md-2">
+        <select class="form-select" name="role">
+          <option value="operator" selected>Operator</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-primary w-100" type="submit">Create User</button>
+      </div>
+    </form> 
+    <hr>-->
+ <!-- Create referral (admin & operator) -->
+    <form class="row g-2" action="{{ url_for('create_referral') }}" method="POST">
+      <div class="col-md-8">
+        <p class="mb-1">Create a one-time referral code (single-use):</p>
+      </div>
+      <div class="col-md-4 text-end">
+        <button class="btn btn-outline-success btn-sm" type="submit">Create Referral</button>
+      </div>
+    </form>
+
+    {% endif %}
+
+   
+  </div>
+</div>
+
+
 
 <!-- TABLE FORM START (Only one form now) -->
 <form action="{{ url_for('delete_selected') }}" method="POST" id="mainForm">
