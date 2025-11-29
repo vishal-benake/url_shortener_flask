@@ -1,34 +1,101 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Admin Panel</h2>
+
+<h2 class="mb-3">Admin Panel</h2>
+
+<!-- Controls Row -->
+<div class="d-flex justify-content-end mb-3">
+    <div class="btn-group">
+        <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+            More Actions
+        </button>
+
+        <ul class="dropdown-menu">
+
+            <!-- DELETE SELECTED (Triggers mainForm submit) -->
+            <li>
+                <button type="button" class="dropdown-item"
+                        onclick="document.getElementById('mainForm').submit();">
+                    Delete Selected
+                </button>
+            </li>
+
+            <!-- DELETE DEACTIVATED URLs -->
+            <li>
+                <form action="{{ url_for('delete_deactivated') }}" method="POST">
+                    <button type="submit" class="dropdown-item text-danger">
+                        Delete All Deactivated
+                    </button>
+                </form>
+            </li>
+
+        </ul>
+    </div>
+</div>
+
+<!-- TABLE FORM START (Only one form now) -->
+<form action="{{ url_for('delete_selected') }}" method="POST" id="mainForm">
+
 <table class="table table-striped table-hover mt-3">
-  <thead class="table-dark">
-    <tr>
-      <th>ID</th>
-      <th>Short URL</th>
-      <th>Target URL</th>
-      <th>Clicks</th>
-      <th>Status</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for url in urls %}
-    <tr>
-      <td>{{ url.id }}</td>
-      <td><a href="{{ url_for('redirect_short', url_key=url.key, _external=True) }}" target="_blank">{{ url.key }}</a></td>
-      <td>{{ url.target_url }}</td>
-      <td>{{ url.clicks }}</td>
-      <td>{{ "Active" if url.is_active else "Inactive" }}</td>
-      <td>
-        {% if url.is_active %}
-        <a href="{{ url_for('deactivate_url', url_id=url.id) }}" class="btn btn-sm btn-warning">Deactivate</a>
-        {% else %}
-        <span class="text-muted">N/A</span>
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
+    <thead class="table-dark">
+        <tr>
+            <th>Select</th>
+            <th>ID</th>
+            <th>Short URL</th>
+            <th>Target URL</th>
+            <th>Clicks</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for url in urls %}
+        <tr>
+
+            <!-- Checkbox -->
+            <td>
+                <input type="checkbox" name="selected_urls" value="{{ url.id }}">
+            </td>
+
+            <td>{{ url.id }}</td>
+
+            <td>
+                <a href="{{ url_for('redirect_short', url_key=url.shorten_key, _external=True) }}" target="_blank">
+                    {{ url.shorten_key }}
+                </a>
+            </td>
+
+            <td>{{ url.target_url }}</td>
+
+            <td>{{ url.clicks }}</td>
+
+            <td>
+                {% if url.is_active %}
+                <span class="badge bg-success">Active</span>
+                {% else %}
+                <span class="badge bg-secondary">Inactive</span>
+                {% endif %}
+            </td>
+
+            <td>
+                {% if url.is_active %}
+                <a href="{{ url_for('deactivate_url', url_id=url.id) }}"
+                   class="btn btn-sm btn-warning">
+                    Deactivate
+                </a>
+                {% else %}
+                <form action="{{ url_for('reactivate_url', url_id=url.id) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-success">Reactivate</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
 </table>
+
+</form>
+
 {% endblock %}

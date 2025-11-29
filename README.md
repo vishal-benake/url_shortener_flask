@@ -62,6 +62,13 @@ python -m venv venv
 venv\Scripts\activate
 ```
 
+#### For Conda:
+
+``` bash
+conda create -p myenv python==3.12 -y
+conda activate ./myenv
+```
+
 ### macOS / Linux:
 
 ``` bash
