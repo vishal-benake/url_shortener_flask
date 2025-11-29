@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <h2 class="mb-3">Shorten your URL</h2>
+    <form method="POST">
+      <div class="mb-3">
+        <input type="text" class="form-control" name="target_url" placeholder="Enter URL" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Shorten</button>
+    </form>
+
+    {% if short_url %}
+    <div class="card mt-4 shadow-sm">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <span id="short-url">{{ short_url }}</span>
+        <button class="btn btn-outline-success" onclick="copyToClipboard('short-url')">Copy</button>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
