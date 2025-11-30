@@ -8,85 +8,78 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
   <div class="container-fluid">
     <a class="navbar-brand" href="{{ url_for('index') }}">URL Shortener</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="nav">
       <ul class="navbar-nav ms-auto">
+
         {% if current_user.is_authenticated %}
-          <!-- <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('admin_panel') }}">Admin</a>
-          </li> -->
+
+          {% if request.endpoint != 'admin_panel' %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('admin_panel') }}">Admin Panel</a>
+          </li>
+          {% endif %}
+
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('logout') }}">Logout ({{ current_user.user.username }})</a>
           </li>
+
         {% else %}
-        {% if request.endpoint != 'login' %}
+
+          {% if request.endpoint != 'login' %}
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('login') }}">Login</a>
           </li>
           {% endif %}
-          <!-- <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('register') }}">Register</a>
-          </li> -->
+
         {% endif %}
       </ul>
     </div>
   </div>
 </nav>
 
-<div class="container">
-  <!-- flash toasts rendered as bootstrap toasts -->
-  <div id="flashes">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="toast align-items-center text-white bg-{{ 'success' if category=='success' else ('danger' if category=='danger' else 'warning') }} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-              <div class="toast-body">{{ message }}</div>
-              <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-          </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-  </div>
+<!-- 🔥 Toast overlay container (does NOT move layout) -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 2000;">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="toast text-white bg-{{ category }} border-0" role="alert">
+        <div class="d-flex">
+          <div class="toast-body">{{ message }}</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                  data-bs-dismiss="toast"></button>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+  {% endwith %}
+</div>
 
+<div class="container">
   {% block content %}{% endblock %}
 </div>
 
-<!-- Toast container for copy & dynamic toasts -->
-<div class="position-fixed top-0 end-0 p-3" style="z-index: 1050" id="toastContainer"></div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('#flashes .toast').forEach(t => new bootstrap.Toast(t, { delay: 3000 }).show());
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.toast').forEach(toastEl => {
+        new bootstrap.Toast(toastEl, { delay: 3000 }).show();
+    });
 });
 
-// helper: show toast
-function showToast(message, kind='success', delay=2500) {
-  const container = document.getElementById('toastContainer');
-  const toastEl = document.createElement('div');
-  toastEl.className = `toast align-items-center text-white bg-${kind} border-0 mb-2`;
-  toastEl.setAttribute('role','alert');
-  toastEl.setAttribute('aria-live','assertive');
-  toastEl.setAttribute('aria-atomic','true');
-  toastEl.innerHTML = `<div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>`;
-  container.appendChild(toastEl);
-  const t = new bootstrap.Toast(toastEl, { delay });
-  t.show();
-  setTimeout(() => toastEl.remove(), delay + 300);
-}
-
-// history.pushState(null, document.title, location.href);
-//   window.addEventListener('popstate', function (event) {
-//     window.location.href = '/';  // redirect to home page
-//   });
+history.pushState(null, document.title, location.href); 
+window.addEventListener('popstate', function (event) { window.location.href = '/';  });
 </script>
+
 </body>
 </html>

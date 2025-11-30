@@ -1,5 +1,6 @@
 # app.py
 import os
+from dotenv import load_dotenv
 import string
 import random
 from datetime import datetime
@@ -29,12 +30,14 @@ login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
 
+load_dotenv()
+
 # ---- Create DB ----
 with app.app_context():
     db.create_all()
 
-    admin_username = "Vishal"
-    admin_password = "MonsterHost8767"
+    admin_username = os.getenv('ADMIN_USERNAME')
+    admin_password = os.getenv('ADMIN_PASSWORD')
 
     existing_admin = User.query.filter_by(username=admin_username).first()
 
@@ -292,7 +295,8 @@ def reactivate_url(url_id):
 # Delete selected
 @app.route('/admin/delete_selected', methods=['POST'])
 @login_required
-@role_required('admin')
+# @role_required('admin')
+
 def delete_selected():
     selected_ids = request.form.getlist('selected_urls')
     if not selected_ids:
@@ -313,7 +317,8 @@ def delete_selected():
 # Delete all deactivated
 @app.route('/admin/delete_deactivated', methods=['POST'])
 @login_required
-@role_required('admin')
+# @role_required('admin')
+@role_required('admin', 'operator')
 def delete_deactivated():
     deactivated = URL.query.filter_by(is_active=False).all()
     if not deactivated:

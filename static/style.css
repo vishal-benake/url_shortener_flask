@@ -90,6 +90,23 @@ body {
     border-radius: 0.5rem;
 }
 
+/* Toast overlay container */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;      /* Above everything */
+    pointer-events: none;
+}
+
+/* Each toast */
+.toast {
+    pointer-events: auto;
+    opacity: 1 !important;
+    margin-bottom: 10px;
+}
+
+
 /* ------------------------------
    RESPONSIVE FIXES
 ------------------------------ */
